@@ -40,8 +40,12 @@ const offToolkits = new Set<string>()
 /**
  * "혼자 일하는 사람만" — 자기가 쓸 도구를 **직접 고르는** 직업으로 좁힌다.
  * 1인 개발자가 만든 것이 닿으려면 그 사람에게 선택권이 있어야 한다.
+ *
+ * **기본 켬.** 이 앱의 주 용도(개인 사이드 프로젝트 대상 찾기)에선 거의 항상 원하는
+ * 상태다 — "모바일 앱 for 출납 창구 사무원"(은행 전산만 쓰는 직업)이 기본 상태에서
+ * 튀어나오면 룰렛이 고장 난 것처럼 느껴진다. 전체 풀 탐험이 opt-out.
  */
-let soloOnly = false
+let soloOnly = true
 
 const targetPool = () => TARGETS.filter((t) => !offTargets.has(t))
 const audiencePool = () =>
@@ -106,7 +110,7 @@ app.innerHTML = `
       <div class="filter-group">
         <h3>for <span class="hint">직업 계열 · 옆 숫자는 직업 수</span></h3>
         <label class="solo-toggle">
-          <input type="checkbox" id="solo-only" />
+          <input type="checkbox" id="solo-only" checked />
           <span><b>혼자 일하는 사람만</b> — 자기 도구를 직접 고르는 직업으로 좁힌다
           (자영업·프리랜서·1인 사업자). 공장 라인이나 조직 안에서 지급된 시스템을
           쓰는 직업은 개인이 만든 것이 닿을 경로가 없다.</span>

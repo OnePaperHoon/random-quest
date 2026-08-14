@@ -129,4 +129,87 @@ export const HINTS: Record<string, Hint[]> = {
       url: 'https://play2048.co/',
     },
   ],
+  '3D·WebGL': [
+    {
+      name: 'Bruno Simon 포트폴리오',
+      desc: '차를 몰고 돌아다니는 이력서',
+      url: 'https://bruno-simon.com/',
+    },
+  ],
+  '모션·애니메이션': [
+    {
+      name: 'cubic-bezier.com',
+      desc: '이징 곡선 편집 하나로 15년째 표준 도구',
+      url: 'https://cubic-bezier.com/',
+    },
+  ],
+  'PDF·인쇄물 생성': [
+    {
+      name: 'Reactive Resume',
+      desc: '계정 없이 이력서를 PDF로',
+      url: 'https://rxresu.me/',
+    },
+  ],
+  '음성 인식·합성': [
+    {
+      name: 'Whisper Web',
+      desc: '음성 인식이 브라우저 안에서만 돈다',
+      url: 'https://github.com/xenova/whisper-web',
+    },
+  ],
+  '비디오 처리·편집': [
+    { name: 'ezgif', desc: 'GIF 편집 한 가지로 장수 중', url: 'https://ezgif.com/' },
+    {
+      name: 'Screenity',
+      desc: '무제한 무료 화면 녹화 확장',
+      url: 'https://github.com/alyssaxuu/screenity',
+    },
+  ],
+  'OCR·문서 인식': [
+    {
+      name: 'NormCap',
+      desc: '화면 캡처가 이미지 대신 텍스트로 잡힌다',
+      url: 'https://dynobo.github.io/normcap/',
+    },
+  ],
+  '위치·모션 센서': [
+    {
+      name: 'GeoGuessr',
+      desc: '거리뷰만 보고 위치를 추리하는 게임',
+      url: 'https://www.geoguessr.com/',
+    },
+    {
+      name: 'Run With Zombies',
+      desc: 'GPS 좀비가 실제 달리기를 쫓아온다',
+      url: 'https://runwithzombies.com/',
+    },
+  ],
+  '특수 입력(게임패드·MIDI)': [
+    {
+      name: 'midi.city',
+      desc: '브라우저가 곧 신디사이저',
+      url: 'https://midi.city/',
+    },
+  ],
+  '표·스프레드시트': [
+    {
+      name: 'NocoDB',
+      desc: 'DB를 스프레드시트처럼 만지게 해준다',
+      url: 'https://nocodb.com/',
+    },
+  ],
+  '로컬 우선·오프라인 동기화': [
+    {
+      name: 'Actual Budget',
+      desc: '가계부가 내 기기 안에서만 산다',
+      url: 'https://actualbudget.org/',
+    },
+  ],
+  '리치 텍스트 에디터': [
+    {
+      name: 'Hemingway Editor',
+      desc: '읽기 어려운 문장을 색으로 보여준다',
+      url: 'https://hemingwayapp.com/',
+    },
+  ],
 }

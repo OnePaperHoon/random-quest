@@ -1,5 +1,11 @@
 import kecoRaw from '../data/keco-2025-raw.json'
-import { DISPLAY_OVERRIDES, EXTRA_AUDIENCES, SOLO_MIDS } from './occupations'
+import {
+  DISPLAY_OVERRIDES,
+  EXTRA_AUDIENCES,
+  EXCLUDED_CODES,
+  OBSCURE_CODES,
+  SOLO_MIDS,
+} from './occupations'
 
 /** 원천: 한국고용직업분류(KECO) 2025 개정 항목표, 고용노동부. 세분류 495개. */
 interface KecoItem {
@@ -36,7 +42,7 @@ export const TARGET_GROUPS: Group[] = [
       '기술 데모·실험',
       '자동화 스크립트',
       'CLI 도구',
-      '브라우저 확장',
+      '크롬 확장프로그램',
     ],
   },
   {
@@ -87,6 +93,10 @@ export const AUDIENCE_GROUPS: Group[] = (() => {
   for (const item of kecoRaw as KecoItem[]) {
     // 잔여 범주는 통계엔 필수여도 룰렛에서 나오면 김샌다.
     if (item.name.includes('기타')) continue
+    // 개인 제품이 도달할 시장이 없는 지위·기관 직업은 뺀다(기준은 occupations.ts).
+    if (EXCLUDED_CODES.has(item.code)) continue
+    // 그림이 안 그려지는 직업도 뺀다 — "말이 안 되는 조합"의 주범(기준은 occupations.ts).
+    if (OBSCURE_CODES.has(item.code)) continue
     // 공식명은 원천에 그대로 두고, 표시할 때만 갈아 끼운다.
     push(item.major, item.mid, DISPLAY_OVERRIDES[item.code] ?? item.name)
   }
