@@ -10,6 +10,7 @@ import {
 } from './data'
 import { initAudio, setMuted, isMuted, done } from './sound'
 import { HINTS } from './hints'
+import { downloadCard } from './card'
 import './style.css'
 
 interface Axis {
@@ -90,6 +91,7 @@ app.innerHTML = `
         <span>using — 기술 카테고리 추가</span>
       </label>
       <button id="filters-btn" class="ghost-btn" type="button">필터</button>
+      <button id="save" class="ghost-btn" type="button" hidden>PNG 저장</button>
       <button id="mute" class="icon-btn" type="button" aria-pressed="false" title="소리 끄기">🔊</button>
       <button id="spin" class="spin-btn">돌리기 <kbd>Space</kbd></button>
     </div>
@@ -274,6 +276,13 @@ muteBtn.addEventListener('click', () => {
 let spinning = false
 /** 휠 스핀 쿨다운 만료 시각 — 트랙패드 관성 이벤트가 다음 스핀을 연쇄시키는 걸 막는다 */
 let wheelReadyAt = 0
+/** 마지막 결과 — PNG 카드는 화면이 아니라 이 데이터로 그린다. 리롤 시 갱신. */
+let lastRows: { key: string; label: string; value: string }[] = []
+
+const saveBtn = app.querySelector<HTMLButtonElement>('#save')!
+saveBtn.addEventListener('click', () => {
+  if (lastRows.length) downloadCard(lastRows)
+})
 
 async function spin() {
   if (spinning || spinBtn.disabled) return
@@ -319,6 +328,12 @@ async function spin() {
   )
 
   done()
+  lastRows = results.map(({ axis, winner }) => ({
+    key: axis.key,
+    label: axis.label,
+    value: winner,
+  }))
+  saveBtn.hidden = false
   spinning = false
   wheelReadyAt = performance.now() + 900
   toggle.disabled = false
@@ -349,6 +364,17 @@ async function reroll(key: string) {
   bar(key).style.width = `${width}px`
   await animate(barFill(key), { width: [0, width], duration: 520, ease: 'outExpo' })
   showHint(key, winner)
+
+  // 리롤된 줄만 카드 데이터에 반영한다(없던 축이면 AXES 순서에 맞춰 삽입).
+  const existing = lastRows.find((r) => r.key === key)
+  if (existing) existing.value = winner
+  else {
+    lastRows.push({ key, label: axis.label, value: winner })
+    lastRows.sort(
+      (a, b) => AXES.findIndex((x) => x.key === a.key) - AXES.findIndex((x) => x.key === b.key)
+    )
+  }
+  saveBtn.hidden = false
 
   spinning = false
   wheelReadyAt = performance.now() + 900
