@@ -1,0 +1,19 @@
+{
+  "name": "random-quest",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "무엇을 만들지 모를 때 돌리는 사이드 프로젝트 아이디어 룰렛",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "animejs": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.0.0"
+  }
+}
