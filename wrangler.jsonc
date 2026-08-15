@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rouletteside",
+  "account_id": "09efe4a8ceb2ff1ec743f0b0779d9e62",
+  "compatibility_date": "2026-08-01",
+  // 정적 에셋만 서빙 — Worker 스크립트(main) 없음. 서버 로직이 생기면 그때 main 추가.
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    { "pattern": "rouletteside.com", "custom_domain": true },
+    { "pattern": "www.rouletteside.com", "custom_domain": true }
+  ]
+}

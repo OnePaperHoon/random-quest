@@ -76,9 +76,10 @@ export function renderCard(rows: CardRow[]): HTMLCanvasElement {
     y += BAR + GAP_ROW
   }
 
+  // 카드가 카톡방에 돌 때 유일한 유입 경로 — 프로젝트명이 아니라 도메인을 박는다.
   ctx.fillStyle = COLOR.brand
   ctx.font = font(600, 30)
-  ctx.fillText('random-quest', PAD, H - 88)
+  ctx.fillText('rouletteside.com', PAD, H - 88)
 
   return canvas
 }
