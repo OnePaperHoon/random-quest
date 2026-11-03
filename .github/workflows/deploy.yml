@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: Deploy to dev server
 
 on:
   push:
@@ -12,20 +12,43 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SITE: rouletteside.com
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
-
       - run: npm ci
-
       # build = tsc --noEmit && vite build — 타입 에러면 여기서 멈추고 배포 안 나간다
       - run: npm run build
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
-      - run: npx wrangler deploy
+      - name: Upload dist to the server (atomic swap)
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          SSH="ssh -i ~/.ssh/deploy_key -o BatchMode=yes root@${HOST}"
+          # /srv/sites/<site>.new 에 풀고 한 번에 교체한다. Caddy 는 같은 경로를 계속 서빙하므로 끊김 없음.
+          tar -C dist -czf - . | $SSH "set -e; S=/srv/sites/$SITE; rm -rf \$S.new \$S.old; mkdir -p \$S.new; tar xzf - -C \$S.new; [ -d \$S ] && mv \$S \$S.old || true; mv \$S.new \$S; rm -rf \$S.old"
+
+      - name: Health check
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          for i in $(seq 1 6); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --resolve ${SITE}:443:${HOST} https://${SITE}/ --max-time 20 || true)
+            echo "attempt $i: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 5
+          done
+          echo "헬스체크 실패(200 아님)"; exit 1
